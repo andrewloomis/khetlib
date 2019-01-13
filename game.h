@@ -10,10 +10,12 @@ public:
     Game();
     void startGame();
     bool isPieceAtPosition(Position pos);
-    int possibleTranslationsForPiece(const Piece& piece);
+    int possibleTranslationsForPiece(int index);
+    std::array<Piece, 24> getPieces() const { return pieces; }
 
 private:
-    std::array<Piece, 80> pieces;
+    std::array<Piece, 24> pieces;
+//    const QList<int> startingConfig = {2,2, 1,1, 5,5};
 
     struct Translations
     {

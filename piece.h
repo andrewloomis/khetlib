@@ -10,7 +10,7 @@ public:
     Piece(int x, int y, int angle, Color color);
     virtual Interaction laserInteraction(Direction laserIncidentDir);
     Position position() const { return pos; }
-
+    virtual ~Piece() {}
 private:
     Position pos;
     Color color;

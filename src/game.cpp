@@ -8,11 +8,13 @@ Game::Game()
 
 void Game::startGame()
 {
-    pieces[0] = Pyramid(5,5,90,Color::Grey);
+    pieces[0] = Pyramid(5,5,90,Color::Red);
+    pieces[1] = Pyramid(1,1,90,Color::Red);
 }
 
-int Game::possibleTranslationsForPiece(const Piece& piece)
+int Game::possibleTranslationsForPiece(int index)
 {
+    Piece piece = pieces[index];
     int possibleTranslations = 255;
     if (piece.position().x == 0) {
         possibleTranslations &= ~(Translations::Left | 

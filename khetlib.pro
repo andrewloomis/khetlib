@@ -1,6 +1,6 @@
 #-------------------------------------------------
 #
-# Project created by QtCreator 2019-01-12T16:11:32
+# Project created by QtCreator 2019-01-12T16:38:34
 #
 #-------------------------------------------------
 
@@ -22,10 +22,19 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-        khetlib.cpp
+        src/piece.cpp \
+        src/game.cpp \
+        src/player.cpp \
+        src/pyramid.cpp \
 
 HEADERS += \
-        khetlib.h
+        khettypes.h \
+        piece.h \
+        game.h \
+        player.h \
+        pyramid.h \
+
+
 unix {
     target.path = /usr/lib
     INSTALLS += target
