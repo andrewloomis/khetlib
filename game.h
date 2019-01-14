@@ -3,6 +3,8 @@
 
 #include "piece.h"
 #include <array>
+#include <memory>
+#include <QList>
 
 class Game
 {
@@ -10,12 +12,13 @@ public:
     Game();
     void startGame();
     bool isPieceAtPosition(Position pos);
-    int possibleTranslationsForPiece(int index);
-    std::array<Piece, 24> getPieces() const { return pieces; }
+    int possibleTranslationsForPiece(std::size_t index);
+    std::array<Piece, 2> getPieces() const { return pieces; }
+    void updatePiecePosition(std::size_t index, int x, int y, int angle);
+    QList<int> calculateBeamCoords() const;
 
 private:
-    std::array<Piece, 24> pieces;
-//    const QList<int> startingConfig = {2,2, 1,1, 5,5};
+    std::array<Piece, 2> pieces;
 
     struct Translations
     {

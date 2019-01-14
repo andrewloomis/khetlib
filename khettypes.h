@@ -17,11 +17,12 @@ enum class Color
 
 enum class Interaction
 {
-    Hit = 0,
+    Kill = 0,
     ReflectNegX,
     ReflectPosX,
     ReflectNegY,
-    ReflectPosY
+    ReflectPosY,
+    Error
 };
 
 enum class Direction

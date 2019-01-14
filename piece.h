@@ -8,13 +8,15 @@ class Piece
 public:
     Piece();
     Piece(int x, int y, int angle, Color color);
-    virtual Interaction laserInteraction(Direction laserIncidentDir);
+    virtual Interaction laserInteraction(Direction laserIncidentDir) const;
     Position position() const { return pos; }
+    int angle() const { return mAngle; }
+    void setPosition(int x, int y, int angle);
     virtual ~Piece() {}
 private:
     Position pos;
     Color color;
-    int angle;
+    int mAngle;
 };
 
 #endif // PIECE_H
