@@ -8,11 +8,15 @@ Piece::Piece(int x, int y, int angle, Color color)
     
 }
 
-Interaction Piece::laserInteraction(Direction laserIncidentDir) const {}
+//Interaction Piece::laserInteraction(Direction laserIncidentDir) const {}
 
-void Piece::setPosition(int x, int y, int angle)
+void Piece::setPosition(int x, int y)
 {
     pos.x = x;
     pos.y = y;
+}
+
+void Piece::setAngle(int angle)
+{
     mAngle = angle;
 }

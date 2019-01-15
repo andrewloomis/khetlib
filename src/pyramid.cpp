@@ -1,8 +1,10 @@
 #include <pyramid.h>
+#include <QDebug>
 
 Interaction Pyramid::laserInteraction(Direction laserIncidentDir) const
 {
     Interaction interaction;
+    qDebug() << "Calculating interaction for piece" << index() << "at angle" << angle();
     if (this->angle() == 0 || this->angle() == 360)
     {
         switch (laserIncidentDir) {
@@ -15,6 +17,7 @@ Interaction Pyramid::laserInteraction(Direction laserIncidentDir) const
             break;
         case Direction::NegY:
             interaction = Interaction::ReflectNegX;
+            break;
         }
     }
     else if (this->angle() == 90)

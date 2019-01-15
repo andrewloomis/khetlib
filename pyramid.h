@@ -3,6 +3,7 @@
 
 #include "piece.h"
 #include "khettypes.h"
+#include <QString>
 
 class Pyramid : public Piece
 {
@@ -10,7 +11,6 @@ public:
     Pyramid(int x, int y, int angle, Color color)
         : Piece(x,y,angle,color) {}
     Interaction laserInteraction(Direction laserIncidentDir) const override;
-//    ~Pyramid() {}
 };
 
 #endif
