@@ -9,8 +9,22 @@ Game::Game()
 
 void Game::startGame()
 {
-    pieces.push_back(std::make_shared<Pyramid>(0,4,270,Color::Red));
-    pieces.push_back(std::make_shared<Pyramid>(9,5,90,Color::Red));
+    pieces.push_back(std::make_shared<Pyramid>(7,0,270,Color::Red));
+    pieces.push_back(std::make_shared<Pyramid>(2,1,0,Color::Red));
+    pieces.push_back(std::make_shared<Pyramid>(0,4,180,Color::Red));
+    pieces.push_back(std::make_shared<Pyramid>(0,5,270,Color::Red));
+    pieces.push_back(std::make_shared<Pyramid>(6,5,270,Color::Red));
+    pieces.push_back(std::make_shared<Pyramid>(7,3,270,Color::Red));
+    pieces.push_back(std::make_shared<Pyramid>(7,4,180,Color::Red));
+
+    pieces.push_back(std::make_shared<Pyramid>(3,2,90,Color::Grey));
+    pieces.push_back(std::make_shared<Pyramid>(2,3,0,Color::Grey));
+    pieces.push_back(std::make_shared<Pyramid>(2,4,90,Color::Grey));
+    pieces.push_back(std::make_shared<Pyramid>(2,7,90,Color::Grey));
+    pieces.push_back(std::make_shared<Pyramid>(9,3,90,Color::Grey));
+    pieces.push_back(std::make_shared<Pyramid>(9,4,0,Color::Grey));
+    pieces.push_back(std::make_shared<Pyramid>(7,6,180,Color::Grey));
+
     int i = 0;
     for (auto& piece : pieces)
     {
@@ -109,7 +123,7 @@ QList<int> Game::calculateBeamCoords() const
     QList<int> coords;
     std::shared_ptr<Piece> targetPiece = nullptr;
     bool terminated = false;
-    Position reflectorPosition = Position{9,7};
+    Position reflectorPosition = Position{9,8};
     Direction laserDirection = Direction::NegY;
     int reflections = 0;
     while (!terminated)
@@ -120,8 +134,14 @@ QList<int> Game::calculateBeamCoords() const
             bool pieceIsInPathOfBeam = isBeamVertical(reflections) ?
                         piece->position().x == reflectorPosition.x :
                         piece->position().y == reflectorPosition.y;
-            bool pieceIsNotReflector = piece->position() != reflectorPosition;
-            if (pieceIsInPathOfBeam && pieceIsNotReflector)
+//            bool pieceIsNotReflector = piece->position() != reflectorPosition;
+            bool pieceIsAheadOfReflector = isBeamVertical(reflections) ? (laserDirection == Direction::NegY ?
+                       piece->position().y < reflectorPosition.y :
+                       piece->position().y > reflectorPosition.y) :
+                       (laserDirection == Direction::NegX ?
+                       piece->position().x < reflectorPosition.x :
+                       piece->position().x > reflectorPosition.x);
+            if (pieceIsInPathOfBeam && pieceIsAheadOfReflector)
             {
                 if (targetPiece == nullptr)
                 {

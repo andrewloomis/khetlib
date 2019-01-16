@@ -1,15 +1,15 @@
-#ifndef PYRAMID_H
-#define PYRAMID_H
+#ifndef PHAROAH_H
+#define PHAROAH_H
 
 #include "piece.h"
 #include "khettypes.h"
 
-class Pyramid : public Piece
+class Pharoah : public Piece
 {
 public:
-    Pyramid(int x, int y, int angle, Color color)
+    Pharoah(int x, int y, int angle, Color color)
         : Piece(x,y,angle,color) {}
     Interaction laserInteraction(Direction laserIncidentDir) const override;
 };
 
-#endif
+#endif // PHAROAH_H

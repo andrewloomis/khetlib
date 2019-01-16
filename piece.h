@@ -9,6 +9,8 @@ public:
     Piece();
     Piece(int x, int y, int angle, Color color);
     virtual Interaction laserInteraction(Direction laserIncidentDir) const = 0;
+    virtual bool canSwap() const { return false; }
+    virtual bool canStack() const { return false; }
     Position position() const { return pos; }
     int angle() const { return mAngle; }
     int index() const { return mIndex; }

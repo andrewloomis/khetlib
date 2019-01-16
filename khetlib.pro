@@ -26,6 +26,9 @@ SOURCES += \
         src/game.cpp \
         src/player.cpp \
         src/pyramid.cpp \
+    src/djed.cpp \
+    src/obelisk.cpp \
+    src/pharoah.cpp
 
 HEADERS += \
         khettypes.h \
@@ -33,6 +36,9 @@ HEADERS += \
         game.h \
         player.h \
         pyramid.h \
+    djed.h \
+    obelisk.h \
+    pharoah.h
 
 
 unix {
