@@ -10,6 +10,7 @@ public:
     Pharoah(int x, int y, int angle, Color color)
         : Piece(x,y,angle,color) {}
     Interaction laserInteraction(Direction laserIncidentDir) const override;
+    PieceType type() const override { return PieceType::Pharoah; }
 };
 
 #endif // PHAROAH_H

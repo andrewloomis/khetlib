@@ -11,7 +11,7 @@ public:
         : Piece(x,y,angle,color) {}
     Interaction laserInteraction(Direction laserIncidentDir) const override;
     bool canSwap() const override { return true; }
-    bool canStack() const override { return false; }
+    PieceType type() const override { return PieceType::Djed; }
 };
 
 #endif // DJED_H

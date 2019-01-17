@@ -5,9 +5,11 @@
 #include <vector>
 #include <memory>
 #include <QList>
+#include <QObject>
 
-class Game
+class Game : public QObject
 {
+    Q_OBJECT
 public:
     Game();
     void startGame();
@@ -16,10 +18,14 @@ public:
     const std::vector<std::shared_ptr<Piece>>& getPieces() const { return pieces; }
     void updatePiecePosition(std::size_t index, int x, int y);
     void updatePieceAngle(std::size_t index, int angle);
-    QList<int> calculateBeamCoords() const;
+    QList<int> calculateBeamCoords();
+    Color currentPlayerTurn() const { return currentTurn; }
+signals:
+    void pieceKilled(int index);
 
 private:
     std::vector<std::shared_ptr<Piece>> pieces;
+    Color currentTurn = Color::Grey;
 
     struct Translations
     {

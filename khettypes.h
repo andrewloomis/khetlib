@@ -17,6 +17,14 @@ struct Position
     }
 };
 
+enum class PieceType
+{
+    Pyramid = 0,
+    Djed,
+    Obelisk,
+    Pharoah
+};
+
 enum class Color
 {
     Red = 0,

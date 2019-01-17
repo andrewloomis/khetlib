@@ -11,6 +11,7 @@ public:
         : Piece(x,y,angle,color) {}
     Interaction laserInteraction(Direction laserIncidentDir) const override;
     bool canStack() const override { return true; }
+    PieceType type() const override { return PieceType::Obelisk; }
 };
 
 #endif // OBELISK_H

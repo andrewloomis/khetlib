@@ -1,5 +1,6 @@
 #include "game.h"
 #include "pyramid.h"
+#include "djed.h"
 #include <QDebug>
 
 Game::Game()
@@ -16,6 +17,8 @@ void Game::startGame()
     pieces.push_back(std::make_shared<Pyramid>(6,5,270,Color::Red));
     pieces.push_back(std::make_shared<Pyramid>(7,3,270,Color::Red));
     pieces.push_back(std::make_shared<Pyramid>(7,4,180,Color::Red));
+    pieces.push_back(std::make_shared<Djed>(4,4,180,Color::Red));
+    pieces.push_back(std::make_shared<Djed>(5,4,180,Color::Red));
 
     pieces.push_back(std::make_shared<Pyramid>(3,2,90,Color::Grey));
     pieces.push_back(std::make_shared<Pyramid>(2,3,0,Color::Grey));
@@ -52,8 +55,11 @@ int Game::possibleTranslationsForPiece(std::size_t index)
         possibleTranslations &= ~(Translations::Bottom | 
             Translations::BottomLeft | Translations::BottomRight);
     }
+
     for (auto otherPiece : pieces)
     {
+        if (piece->canSwap() && otherPiece->type() == PieceType::Pyramid)
+            continue;
         if (otherPiece->position().x == piece->position().x - 1) {
             if (otherPiece->position().y == piece->position().y + 1)
             {
@@ -113,7 +119,7 @@ bool isBeamVertical(int& reflections)
     return reflections % 2 == 0;
 }
 
-QList<int> Game::calculateBeamCoords() const
+QList<int> Game::calculateBeamCoords()
 {
     // Coords in sets of 3:
     // 0 - Xcoord
@@ -182,12 +188,11 @@ QList<int> Game::calculateBeamCoords() const
         {
             coords << targetPiece->position().x << targetPiece->position().y << 1;
             Interaction targetPieceInteraction = targetPiece->laserInteraction(laserDirection);
-            qDebug() << "Piece" << targetPiece->index() << "intercepted laser from"
-                     << (int)laserDirection << ", reflecting" << (int)targetPieceInteraction;
             switch (targetPieceInteraction)
             {
             case Interaction::Kill:
                 qDebug() << "Piece" << targetPiece->index() << "Killed";
+//                pieces.erase(pieces.begin()+targetPiece->index());
                 terminated = true;
                 break;
             case Interaction::ReflectNegX:
