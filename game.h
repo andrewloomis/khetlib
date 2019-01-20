@@ -11,21 +11,25 @@ class Game : public QObject
 {
     Q_OBJECT
 public:
-    Game();
+    Game(bool godMode);
     void startGame();
+    void nextTurn() { currentTurn == Color::Grey ? currentTurn = Color::Red : currentTurn = Color::Grey; }
     bool isPieceAtPosition(Position pos);
     int possibleTranslationsForPiece(std::size_t index);
     const std::vector<std::shared_ptr<Piece>>& getPieces() const { return pieces; }
     void updatePiecePosition(std::size_t index, int x, int y);
     void updatePieceAngle(std::size_t index, int angle);
     QList<int> calculateBeamCoords();
+    Color getPieceColor(std::size_t index) const;
     Color currentPlayerTurn() const { return currentTurn; }
+    bool isGodMode() const { return godMode; }
 signals:
     void pieceKilled(int index);
 
 private:
     std::vector<std::shared_ptr<Piece>> pieces;
     Color currentTurn = Color::Grey;
+    bool godMode = false;
 
     struct Translations
     {

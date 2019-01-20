@@ -12,18 +12,25 @@ public:
     virtual bool canSwap() const { return false; }
     virtual bool canStack() const { return false; }
     virtual PieceType type() const = 0;
+    void stack() { stacked = true; }
+    void unstack() { stacked = false; }
     Position position() const { return pos; }
     int angle() const { return mAngle; }
     int index() const { return mIndex; }
     void setIndex(int index) { mIndex = index; }
     void setPosition(int x, int y);
     void setAngle(int angle);
+    bool isKilled() const { return killed; }
+    void setKilled() { killed = true; }
+    Color color() const { return mColor; }
     virtual ~Piece() {}
 private:
     Position pos;
-    Color color;
+    Color mColor;
     int mAngle;
     int mIndex;
+    bool stacked = false;
+    bool killed = false;
 };
 
 #endif // PIECE_H

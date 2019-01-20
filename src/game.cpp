@@ -1,9 +1,12 @@
 #include "game.h"
 #include "pyramid.h"
 #include "djed.h"
+#include "obelisk.h"
+#include "pharoah.h"
 #include <QDebug>
 
-Game::Game()
+Game::Game(bool godMode)
+    : godMode(godMode)
 {
     startGame();
 }
@@ -12,13 +15,14 @@ void Game::startGame()
 {
     pieces.push_back(std::make_shared<Pyramid>(7,0,270,Color::Red));
     pieces.push_back(std::make_shared<Pyramid>(2,1,0,Color::Red));
-    pieces.push_back(std::make_shared<Pyramid>(0,4,180,Color::Red));
-    pieces.push_back(std::make_shared<Pyramid>(0,5,270,Color::Red));
+    pieces.push_back(std::make_shared<Pyramid>(0,3,180,Color::Red));
+    pieces.push_back(std::make_shared<Pyramid>(0,4,270,Color::Red));
     pieces.push_back(std::make_shared<Pyramid>(6,5,270,Color::Red));
     pieces.push_back(std::make_shared<Pyramid>(7,3,270,Color::Red));
     pieces.push_back(std::make_shared<Pyramid>(7,4,180,Color::Red));
-    pieces.push_back(std::make_shared<Djed>(4,4,180,Color::Red));
-    pieces.push_back(std::make_shared<Djed>(5,4,180,Color::Red));
+    pieces.push_back(std::make_shared<Obelisk>(6,0,0,Color::Red));
+    pieces.push_back(std::make_shared<Obelisk>(4,0,0,Color::Red));
+    pieces.push_back(std::make_shared<Pharoah>(5,0,0,Color::Red));
 
     pieces.push_back(std::make_shared<Pyramid>(3,2,90,Color::Grey));
     pieces.push_back(std::make_shared<Pyramid>(2,3,0,Color::Grey));
@@ -27,12 +31,25 @@ void Game::startGame()
     pieces.push_back(std::make_shared<Pyramid>(9,3,90,Color::Grey));
     pieces.push_back(std::make_shared<Pyramid>(9,4,0,Color::Grey));
     pieces.push_back(std::make_shared<Pyramid>(7,6,180,Color::Grey));
+    pieces.push_back(std::make_shared<Obelisk>(3,7,0,Color::Grey));
+    pieces.push_back(std::make_shared<Obelisk>(5,7,0,Color::Grey));
+    pieces.push_back(std::make_shared<Pharoah>(4,7,180,Color::Grey));
+
+    pieces.push_back(std::make_shared<Djed>(4,3,0,Color::Red));
+    pieces.push_back(std::make_shared<Djed>(5,3,90,Color::Red));
+    pieces.push_back(std::make_shared<Djed>(4,4,90,Color::Grey));
+    pieces.push_back(std::make_shared<Djed>(5,4,0,Color::Grey));
 
     int i = 0;
     for (auto& piece : pieces)
     {
         piece->setIndex(i++);
     }
+}
+
+Color Game::getPieceColor(std::size_t index) const
+{
+    return pieces[index]->color();
 }
 
 int Game::possibleTranslationsForPiece(std::size_t index)
@@ -192,7 +209,7 @@ QList<int> Game::calculateBeamCoords()
             {
             case Interaction::Kill:
                 qDebug() << "Piece" << targetPiece->index() << "Killed";
-//                pieces.erase(pieces.begin()+targetPiece->index());
+                targetPiece->setKilled();
                 terminated = true;
                 break;
             case Interaction::ReflectNegX:

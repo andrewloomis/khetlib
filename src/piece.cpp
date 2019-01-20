@@ -3,7 +3,7 @@
 Piece::Piece() : pos(0,0) {}
 
 Piece::Piece(int x, int y, int angle, Color color)
-    : pos(x,y), color(color), mAngle(angle)
+    : pos(x,y), mColor(color), mAngle(angle)
 {
     
 }

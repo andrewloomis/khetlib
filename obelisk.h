@@ -8,7 +8,7 @@ class Obelisk : public Piece
 {
 public:
     Obelisk(int x, int y, int angle, Color color)
-        : Piece(x,y,angle,color) {}
+        : Piece(x,y,angle,color) { stack(); }
     Interaction laserInteraction(Direction laserIncidentDir) const override;
     bool canStack() const override { return true; }
     PieceType type() const override { return PieceType::Obelisk; }
