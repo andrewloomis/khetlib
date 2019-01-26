@@ -5,8 +5,7 @@
 #include "pharoah.h"
 #include <QDebug>
 
-Game::Game(bool godMode)
-    : godMode(godMode)
+Game::Game()
 {
     startGame();
 }
@@ -75,7 +74,8 @@ int Game::possibleTranslationsForPiece(std::size_t index)
 
     for (auto otherPiece : pieces)
     {
-        if (piece->canSwap() && otherPiece->type() == PieceType::Pyramid)
+        if ((piece->canSwap() && otherPiece->type() == PieceType::Pyramid) ||
+                otherPiece->isKilled())
             continue;
         if (otherPiece->position().x == piece->position().x - 1) {
             if (otherPiece->position().y == piece->position().y + 1)
@@ -136,7 +136,7 @@ bool isBeamVertical(int& reflections)
     return reflections % 2 == 0;
 }
 
-QList<int> Game::calculateBeamCoords()
+QList<int> Game::calculateBeamCoords(int startX, int startY)
 {
     // Coords in sets of 3:
     // 0 - Xcoord
@@ -146,25 +146,27 @@ QList<int> Game::calculateBeamCoords()
     QList<int> coords;
     std::shared_ptr<Piece> targetPiece = nullptr;
     bool terminated = false;
-    Position reflectorPosition = Position{9,8};
-    Direction laserDirection = Direction::NegY;
+    Position reflectorPosition = Position{startX, startY == 0 ? -1 : 8};
+    Direction laserDirection = startY == 0 ? Direction::PosY : Direction::NegY;
     int reflections = 0;
     while (!terminated)
     {
         // Path search
         for (const auto& piece : pieces)
         {
+            bool pieceIsNotKilled = !piece->isKilled();
             bool pieceIsInPathOfBeam = isBeamVertical(reflections) ?
                         piece->position().x == reflectorPosition.x :
                         piece->position().y == reflectorPosition.y;
-//            bool pieceIsNotReflector = piece->position() != reflectorPosition;
             bool pieceIsAheadOfReflector = isBeamVertical(reflections) ? (laserDirection == Direction::NegY ?
                        piece->position().y < reflectorPosition.y :
                        piece->position().y > reflectorPosition.y) :
                        (laserDirection == Direction::NegX ?
                        piece->position().x < reflectorPosition.x :
                        piece->position().x > reflectorPosition.x);
-            if (pieceIsInPathOfBeam && pieceIsAheadOfReflector)
+
+            if (pieceIsNotKilled && pieceIsInPathOfBeam &&
+                pieceIsAheadOfReflector)
             {
                 if (targetPiece == nullptr)
                 {
@@ -210,6 +212,7 @@ QList<int> Game::calculateBeamCoords()
             case Interaction::Kill:
                 qDebug() << "Piece" << targetPiece->index() << "Killed";
                 targetPiece->setKilled();
+                emit pieceKilled(targetPiece->index());
                 terminated = true;
                 break;
             case Interaction::ReflectNegX:
