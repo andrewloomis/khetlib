@@ -23,6 +23,9 @@ public:
     Color getPieceColor(std::size_t index) const;
     Color currentPlayerTurn() const { return currentTurn; }
 //    bool isGodMode() const { return godMode; }
+    bool operator==(const Game& otherGame);
+//    std::shared_ptr<Piece> getPiece(size_t index) { return pieces[index]; }
+
 signals:
     void pieceKilled(int index);
 
