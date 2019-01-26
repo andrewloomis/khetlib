@@ -47,6 +47,20 @@ void Game::startGame()
     }
 }
 
+bool Game::operator==(const Game &otherGame)
+{
+    auto otherPieces = otherGame.getPieces();
+    if (otherPieces.size() == pieces.size())
+    {
+        for(std::size_t i = 0; i < pieces.size(); i++)
+        {
+            if (pieces[i] != otherPieces[i]) return false;
+        }
+        return true;
+    }
+    return false;
+}
+
 Color Game::getPieceColor(std::size_t index) const
 {
     return pieces[index]->color();

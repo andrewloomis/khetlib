@@ -24,6 +24,9 @@ public:
     void setKilled() { killed = true; }
     Color color() const { return mColor; }
     virtual ~Piece() {}
+    bool operator==(const Piece& otherPiece);
+    bool operator!=(const Piece& otherPiece) { return !operator==(otherPiece); }
+
 private:
     Position pos;
     Color mColor;

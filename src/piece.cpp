@@ -8,7 +8,15 @@ Piece::Piece(int x, int y, int angle, Color color)
     
 }
 
-//Interaction Piece::laserInteraction(Direction laserIncidentDir) const {}
+bool Piece::operator==(const Piece &otherPiece)
+{
+    return (type() == otherPiece.type() &&
+            position() == otherPiece.position() &&
+            angle() == otherPiece.angle() &&
+            color() == otherPiece.color() &&
+            index() == otherPiece.index() &&
+            isKilled() == otherPiece.isKilled());
+}
 
 void Piece::setPosition(int x, int y)
 {
