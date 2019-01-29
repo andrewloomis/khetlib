@@ -23,7 +23,7 @@ public:
 
 private:
     QString username;
-    Color mColor;
+    Color mColor = Color::Red;
 };
 
 #endif // PLAYER_H

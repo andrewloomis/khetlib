@@ -22,12 +22,15 @@ public:
     QList<int> calculateBeamCoords(int startX, int startY);
     Color getPieceColor(std::size_t index) const;
     Color currentPlayerTurn() const { return currentTurn; }
-//    bool isGodMode() const { return godMode; }
     bool operator==(const Game& otherGame);
-//    std::shared_ptr<Piece> getPiece(size_t index) { return pieces[index]; }
-
+    Position getPiecePosition(size_t index) const { return pieces[index]->position(); }
+    int getPieceAngle(size_t index) const { return pieces[index]->angle(); }
+    PieceType getPieceType(size_t index) const { return pieces[index]->type(); }
+    void reset();
 signals:
     void pieceKilled(int index);
+    void pharoahKilled(int index);
+    void unstackPiece(int index, QString color);
 
 private:
     std::vector<std::shared_ptr<Piece>> pieces;

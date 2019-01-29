@@ -14,6 +14,7 @@ public:
     virtual PieceType type() const = 0;
     void stack() { stacked = true; }
     void unstack() { stacked = false; }
+    bool isStacked() { return stacked; }
     Position position() const { return pos; }
     int angle() const { return mAngle; }
     int index() const { return mIndex; }

@@ -4,6 +4,7 @@
 #include "obelisk.h"
 #include "pharoah.h"
 #include <QDebug>
+#include <QTimer>
 
 Game::Game()
 {
@@ -46,6 +47,13 @@ void Game::startGame()
     }
 }
 
+void Game::reset()
+{
+    currentTurn = Color::Grey;
+    pieces.clear();
+    startGame();
+}
+
 bool Game::operator==(const Game &otherGame)
 {
     auto otherPieces = otherGame.getPieces();
@@ -68,12 +76,94 @@ Color Game::getPieceColor(std::size_t index) const
 int Game::possibleTranslationsForPiece(std::size_t index)
 {
     std::shared_ptr<Piece> piece = pieces[index];
+    int xPos = piece->position().x;
+    int yPos = piece->position().y;
     int possibleTranslations = 255;
-    if (piece->position().x == 0) {
+
+    // Colored zone restrictions
+    if (piece->color() == Color::Red)
+    {
+        if (xPos == 8)
+        {
+            possibleTranslations &= ~(Translations::Right |
+                Translations::BottomRight | Translations::TopRight);
+        }
+        else if (xPos == 1)
+        {
+            if (yPos == 6)
+            {
+                possibleTranslations &= ~Translations::Bottom;
+            }
+            else if (yPos == 1)
+            {
+                possibleTranslations &= ~Translations::Top;
+            }
+        }
+        else if (xPos == 2)
+        {
+            if (yPos == 6)
+            {
+                possibleTranslations &= ~Translations::BottomLeft;
+            }
+            else if (yPos == 7)
+            {
+                possibleTranslations &= ~Translations::Left;
+            }
+            else if (yPos == 1)
+            {
+                possibleTranslations &= ~Translations::TopLeft;
+            }
+            else if (yPos == 0)
+            {
+                possibleTranslations &= ~Translations::Left;
+            }
+        }
+    }
+
+    if (piece->color() == Color::Grey)
+    {
+        if (xPos == 1)
+        {
+            possibleTranslations &= ~(Translations::Left |
+                Translations::BottomLeft | Translations::TopLeft);
+        }
+        else if (xPos == 8)
+        {
+            if (yPos == 6)
+            {
+                possibleTranslations &= ~Translations::Bottom;
+            }
+            else if (yPos == 1)
+            {
+                possibleTranslations &= ~Translations::Top;
+            }
+        }
+        else if (xPos == 7)
+        {
+            if (yPos == 6)
+            {
+                possibleTranslations &= ~Translations::BottomRight;
+            }
+            else if (yPos == 7)
+            {
+                possibleTranslations &= ~Translations::Right;
+            }
+            else if (yPos == 1)
+            {
+                possibleTranslations &= ~Translations::TopRight;
+            }
+            else if (yPos == 0)
+            {
+                possibleTranslations &= ~Translations::Right;
+            }
+        }
+    }
+
+    if (xPos == 0) {
         possibleTranslations &= ~(Translations::Left | 
             Translations::BottomLeft | Translations::TopLeft);
     }
-    if (piece->position().x == 9) {
+    if (xPos == 9) {
         possibleTranslations &= ~(Translations::Right | 
             Translations::BottomRight | Translations::TopRight);
     }
@@ -91,7 +181,7 @@ int Game::possibleTranslationsForPiece(std::size_t index)
         if ((piece->canSwap() && otherPiece->type() == PieceType::Pyramid) ||
                 otherPiece->isKilled())
             continue;
-        if (otherPiece->position().x == piece->position().x - 1) {
+        if (otherPiece->position().x == xPos - 1) {
             if (otherPiece->position().y == piece->position().y + 1)
             {
                 possibleTranslations &= ~(Translations::BottomLeft);
@@ -221,32 +311,46 @@ QList<int> Game::calculateBeamCoords(int startX, int startY)
         {
             coords << targetPiece->position().x << targetPiece->position().y << 1;
             Interaction targetPieceInteraction = targetPiece->laserInteraction(laserDirection);
+            int targetPieceIndex = targetPiece->index();
             switch (targetPieceInteraction)
             {
             case Interaction::Kill:
-                qDebug() << "Piece" << targetPiece->index() << "Killed";
-                targetPiece->setKilled();
-                emit pieceKilled(targetPiece->index());
+                qDebug() << "Piece" << targetPieceIndex << "Killed";
+                if (targetPiece->canStack() && targetPiece->isStacked())
+                {
+                    targetPiece->unstack();
+                    emit unstackPiece(targetPieceIndex,
+                                      targetPiece->color() == Color::Red ? "red" : "grey");
+                }
+                else
+                {
+                    targetPiece->setKilled();
+                    emit pieceKilled(targetPieceIndex);
+                    if (targetPiece->type() == PieceType::Pharoah)
+                    {
+                        emit pharoahKilled(targetPieceIndex);
+                    }
+                }
                 terminated = true;
                 break;
             case Interaction::ReflectNegX:
-                qDebug() << "Piece" << targetPiece->index() << "Reflecting NegX";
+                qDebug() << "Piece" << targetPieceIndex << "Reflecting NegX";
                 laserDirection = Direction::NegX;
                 break;
             case Interaction::ReflectPosX:
-                qDebug() << "Piece" << targetPiece->index() << "Reflecting PosX";
+                qDebug() << "Piece" << targetPieceIndex << "Reflecting PosX";
                 laserDirection = Direction::PosX;
                 break;
             case Interaction::ReflectNegY:
-                qDebug() << "Piece" << targetPiece->index() << "Reflecting NegY";
+                qDebug() << "Piece" << targetPieceIndex << "Reflecting NegY";
                 laserDirection = Direction::NegY;
                 break;
             case Interaction::ReflectPosY:
-                qDebug() << "Piece" << targetPiece->index() << "Reflecting PosY";
+                qDebug() << "Piece" << targetPieceIndex << "Reflecting PosY";
                 laserDirection = Direction::PosY;
                 break;
             case Interaction::Error:
-                qDebug() << "Piece" << targetPiece->index() << "Interaction error";
+                qDebug() << "Piece" << targetPieceIndex << "Interaction error";
             }
             reflections++;
             reflectorPosition = targetPiece->position();
