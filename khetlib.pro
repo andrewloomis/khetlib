@@ -28,7 +28,8 @@ SOURCES += \
         src/pyramid.cpp \
     src/djed.cpp \
     src/obelisk.cpp \
-    src/pharoah.cpp
+    src/pharoah.cpp \
+    src/khettypes.cpp
 
 HEADERS += \
         khettypes.h \

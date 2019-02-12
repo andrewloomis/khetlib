@@ -2,6 +2,7 @@
 #define GAME_H
 
 #include "piece.h"
+#include "khettypes.h"
 #include <vector>
 #include <memory>
 #include <QList>
@@ -12,21 +13,30 @@ class Game : public QObject
     Q_OBJECT
 public:
     Game();
+    Game(Game& newGame);
     void startGame();
     void nextTurn() { currentTurn == Color::Grey ? currentTurn = Color::Red : currentTurn = Color::Grey; }
     bool isPieceAtPosition(Position pos);
     int possibleTranslationsForPiece(std::size_t index);
+
     const std::vector<std::shared_ptr<Piece>>& getPieces() const { return pieces; }
+
     void updatePiecePosition(std::size_t index, int x, int y);
     void updatePieceAngle(std::size_t index, int angle);
+
     QList<int> calculateBeamCoords(int startX, int startY);
-    Color getPieceColor(std::size_t index) const;
     Color currentPlayerTurn() const { return currentTurn; }
     bool operator==(const Game& otherGame);
+
+    Color getPieceColor(std::size_t index) const;
     Position getPiecePosition(size_t index) const { return pieces[index]->position(); }
     int getPieceAngle(size_t index) const { return pieces[index]->angle(); }
     PieceType getPieceType(size_t index) const { return pieces[index]->type(); }
+    Move getLastMove() const { return lastMove; }
+    void setLastMove(Move move) { lastMove = move; }
+
     void reset();
+
 signals:
     void pieceKilled(int index);
     void pharoahKilled(int index);
@@ -35,19 +45,8 @@ signals:
 private:
     std::vector<std::shared_ptr<Piece>> pieces;
     Color currentTurn = Color::Grey;
+    Move lastMove;
 //    bool godMode = false;
-
-    struct Translations
-    {
-        static const int TopLeft = 1;
-        static const int Top = 2;
-        static const int TopRight = 4;
-        static const int Left = 8;
-        static const int Right = 16;
-        static const int BottomLeft = 32;
-        static const int Bottom = 64;
-        static const int BottomRight = 128;
-    };
 };
 
 #endif // GAME_H

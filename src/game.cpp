@@ -11,6 +11,13 @@ Game::Game()
     startGame();
 }
 
+Game::Game(Game& newGame)
+    : pieces(newGame.pieces), currentTurn(newGame.currentTurn),
+      lastMove(newGame.lastMove)
+{
+
+}
+
 void Game::startGame()
 {
     pieces.push_back(std::make_shared<Pyramid>(7,0,270,Color::Red));

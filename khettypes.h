@@ -5,6 +5,7 @@ struct Position
 {
     int x;
     int y;
+    Position() {}
     Position(int x, int y)
         : x(x), y(y) {}
     bool operator==(const Position& other) const
@@ -47,6 +48,49 @@ enum class Direction
     PosX,
     NegY,
     PosY
+};
+
+struct Translations
+{
+    static const int TopLeft = 1;
+    static const int Top = 2;
+    static const int TopRight = 4;
+    static const int Left = 8;
+    static const int Right = 16;
+    static const int BottomLeft = 32;
+    static const int Bottom = 64;
+    static const int BottomRight = 128;
+};
+
+struct Move
+{
+    Move() {}
+    Move(int index, Position pos, int angle = -1)
+        : pieceIndex(index), movedPosition(pos),
+          movedAngle(angle) {}
+    static Move minInit();
+    static Move maxInit();
+    bool operator>(const Move& other)
+    {
+        return value > other.value;
+    }
+    bool operator<(const Move& other)
+    {
+        return value < other.value;
+    }
+    bool operator>=(const Move& other)
+    {
+        return value >= other.value;
+    }
+    bool operator<=(const Move& other)
+    {
+        return value <= other.value;
+    }
+
+    int pieceIndex;
+    Position movedPosition;
+    int movedAngle;
+    int value = 0;
 };
 
 #endif

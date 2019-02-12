@@ -12,6 +12,7 @@ public:
     Interaction laserInteraction(Direction laserIncidentDir) const override;
     bool canStack() const override { return true; }
     PieceType type() const override { return PieceType::Obelisk; }
+    int value() const override { return isStacked() ? 25000 : 10000; }
 };
 
 #endif // OBELISK_H

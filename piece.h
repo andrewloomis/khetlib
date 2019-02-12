@@ -12,9 +12,10 @@ public:
     virtual bool canSwap() const { return false; }
     virtual bool canStack() const { return false; }
     virtual PieceType type() const = 0;
+    virtual int value() const = 0;
     void stack() { stacked = true; }
     void unstack() { stacked = false; }
-    bool isStacked() { return stacked; }
+    bool isStacked() const { return stacked; }
     Position position() const { return pos; }
     int angle() const { return mAngle; }
     int index() const { return mIndex; }
