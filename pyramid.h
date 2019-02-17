@@ -12,6 +12,9 @@ public:
     Interaction laserInteraction(Direction laserIncidentDir) const override;
     PieceType type() const override { return PieceType::Pyramid; }
     int value() const override { return 75000; }
+
+private:
+    bool debugInfo = false;
 };
 
 #endif

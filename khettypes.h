@@ -68,6 +68,13 @@ struct Move
     Move(int index, Position pos, int angle = -1)
         : pieceIndex(index), movedPosition(pos),
           movedAngle(angle) {}
+//    Move(const Move& other)
+//    {
+//        value = other.value;
+//        pieceIndex = other.pieceIndex;
+//        movedPosition = other.movedPosition;
+//        movedAngle = other.movedAngle;
+//    }
     static Move minInit();
     static Move maxInit();
     bool operator>(const Move& other)
@@ -87,10 +94,11 @@ struct Move
         return value <= other.value;
     }
 
-    int pieceIndex;
+    int pieceIndex = -1;
     Position movedPosition;
-    int movedAngle;
+    int movedAngle = -1;
     int value = 0;
+    int track = -1;
 };
 
 #endif

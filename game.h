@@ -13,11 +13,11 @@ class Game : public QObject
     Q_OBJECT
 public:
     Game();
-    Game(Game& newGame);
+    Game(const Game& newGame);
     void startGame();
-    void nextTurn() { currentTurn == Color::Grey ? currentTurn = Color::Red : currentTurn = Color::Grey; }
+    void nextTurn() { currentTurn = currentTurn == Color::Grey ? Color::Red : Color::Grey; }
     bool isPieceAtPosition(Position pos);
-    int possibleTranslationsForPiece(std::size_t index);
+    int possibleTranslationsForPiece(std::size_t index) const;
 
     const std::vector<std::shared_ptr<Piece>>& getPieces() const { return pieces; }
 
@@ -25,6 +25,7 @@ public:
     void updatePieceAngle(std::size_t index, int angle);
 
     QList<int> calculateBeamCoords(int startX, int startY);
+    void endTurn();
     Color currentPlayerTurn() const { return currentTurn; }
     bool operator==(const Game& otherGame);
 
@@ -34,8 +35,9 @@ public:
     PieceType getPieceType(size_t index) const { return pieces[index]->type(); }
     Move getLastMove() const { return lastMove; }
     void setLastMove(Move move) { lastMove = move; }
-
+    bool isGameOver() const { return gameOver; }
     void reset();
+    void printPieceLayout() const;
 
 signals:
     void pieceKilled(int index);
@@ -46,6 +48,8 @@ private:
     std::vector<std::shared_ptr<Piece>> pieces;
     Color currentTurn = Color::Grey;
     Move lastMove;
+    bool gameOver = false;
+    bool debugInfo = false;
 //    bool godMode = false;
 };
 

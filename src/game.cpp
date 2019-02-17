@@ -11,11 +11,11 @@ Game::Game()
     startGame();
 }
 
-Game::Game(Game& newGame)
+Game::Game(const Game& newGame)
     : pieces(newGame.pieces), currentTurn(newGame.currentTurn),
       lastMove(newGame.lastMove)
 {
-
+//    qDebug() << "copy";
 }
 
 void Game::startGame()
@@ -54,6 +54,26 @@ void Game::startGame()
     }
 }
 
+void Game::printPieceLayout() const
+{
+    qDebug() << "Pieces: (" << (currentTurn == Color::Red ? "red" : "grey")
+             << " turn)";
+    for (auto piece : pieces)
+    {
+        auto pos = piece->position();
+        qDebug() << "index:" << piece->index()
+                 << "x:" << pos.x << "y:" << pos.y
+                 << "angle:" << piece->angle() << "killed:" << piece->isKilled();
+    }
+}
+
+void Game::endTurn()
+{
+    calculateBeamCoords(currentTurn == Color::Red ? 0 : 9,
+                        currentTurn == Color::Red ? 0 : 7);
+    nextTurn();
+}
+
 void Game::reset()
 {
     currentTurn = Color::Grey;
@@ -80,7 +100,7 @@ Color Game::getPieceColor(std::size_t index) const
     return pieces[index]->color();
 }
 
-int Game::possibleTranslationsForPiece(std::size_t index)
+int Game::possibleTranslationsForPiece(std::size_t index) const
 {
     std::shared_ptr<Piece> piece = pieces[index];
     int xPos = piece->position().x;
@@ -232,13 +252,14 @@ int Game::possibleTranslationsForPiece(std::size_t index)
 
 void Game::updatePiecePosition(std::size_t index, int x, int y)
 {
-    auto& piece = pieces[index];
+    auto piece = pieces[index];
     piece->setPosition(x,y);
 }
 
 void Game::updatePieceAngle(std::size_t index, int angle)
 {
-    auto& piece = pieces[index];
+//    qDebug() << "index:" << index;
+    auto piece = pieces[index];
     piece->setAngle(angle);
 }
 
@@ -299,7 +320,7 @@ QList<int> Game::calculateBeamCoords(int startX, int startY)
         // No piece in path
         if (targetPiece == nullptr)
         {
-            qDebug() << "Beam hit wall";
+            if (debugInfo) qDebug() << "Beam hit wall";
 
             if (isBeamVertical(reflections))
             {
@@ -322,7 +343,7 @@ QList<int> Game::calculateBeamCoords(int startX, int startY)
             switch (targetPieceInteraction)
             {
             case Interaction::Kill:
-                qDebug() << "Piece" << targetPieceIndex << "Killed";
+                if (debugInfo) qDebug() << "Piece" << targetPieceIndex << "Killed";
                 if (targetPiece->canStack() && targetPiece->isStacked())
                 {
                     targetPiece->unstack();
@@ -335,29 +356,30 @@ QList<int> Game::calculateBeamCoords(int startX, int startY)
                     emit pieceKilled(targetPieceIndex);
                     if (targetPiece->type() == PieceType::Pharoah)
                     {
+                        gameOver = true;
                         emit pharoahKilled(targetPieceIndex);
                     }
                 }
                 terminated = true;
                 break;
             case Interaction::ReflectNegX:
-                qDebug() << "Piece" << targetPieceIndex << "Reflecting NegX";
+                if (debugInfo) qDebug() << "Piece" << targetPieceIndex << "Reflecting NegX";
                 laserDirection = Direction::NegX;
                 break;
             case Interaction::ReflectPosX:
-                qDebug() << "Piece" << targetPieceIndex << "Reflecting PosX";
+                if (debugInfo) qDebug() << "Piece" << targetPieceIndex << "Reflecting PosX";
                 laserDirection = Direction::PosX;
                 break;
             case Interaction::ReflectNegY:
-                qDebug() << "Piece" << targetPieceIndex << "Reflecting NegY";
+                if (debugInfo) qDebug() << "Piece" << targetPieceIndex << "Reflecting NegY";
                 laserDirection = Direction::NegY;
                 break;
             case Interaction::ReflectPosY:
-                qDebug() << "Piece" << targetPieceIndex << "Reflecting PosY";
+                if (debugInfo) qDebug() << "Piece" << targetPieceIndex << "Reflecting PosY";
                 laserDirection = Direction::PosY;
                 break;
             case Interaction::Error:
-                qDebug() << "Piece" << targetPieceIndex << "Interaction error";
+                if (debugInfo) qDebug() << "Piece" << targetPieceIndex << "Interaction error";
             }
             reflections++;
             reflectorPosition = targetPiece->position();

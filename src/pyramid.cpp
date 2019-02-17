@@ -4,7 +4,7 @@
 Interaction Pyramid::laserInteraction(Direction laserIncidentDir) const
 {
     Interaction interaction;
-    qDebug() << "Calculating interaction for piece" << index() << "at angle" << angle();
+    if (debugInfo) qDebug() << "Calculating interaction for piece" << index() << "at angle" << angle();
     if (this->angle() == 0 || this->angle() == 360)
     {
         switch (laserIncidentDir) {

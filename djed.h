@@ -13,6 +13,9 @@ public:
     bool canSwap() const override { return true; }
     PieceType type() const override { return PieceType::Djed; }
     int value() const override { return 0; }
+
+private:
+    bool debugInfo = false;
 };
 
 #endif // DJED_H
