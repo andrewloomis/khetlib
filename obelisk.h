@@ -7,6 +7,8 @@
 class Obelisk : public Piece
 {
 public:
+    Obelisk(const Piece& piece)
+        : Piece(piece) {}
     Obelisk(int x, int y, int angle, Color color)
         : Piece(x,y,angle,color) { stack(); }
     Interaction laserInteraction(Direction laserIncidentDir) const override;

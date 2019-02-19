@@ -21,6 +21,7 @@ public:
     int index() const { return mIndex; }
     void setIndex(int index) { mIndex = index; }
     void setPosition(int x, int y);
+    void setPosition(Position position);
     void setAngle(int angle);
     bool isKilled() const { return killed; }
     void setKilled() { killed = true; }

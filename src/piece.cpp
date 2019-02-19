@@ -24,6 +24,12 @@ void Piece::setPosition(int x, int y)
     pos.y = y;
 }
 
+void Piece::setPosition(Position position)
+{
+    pos.x = position.x;
+    pos.y = position.y;
+}
+
 void Piece::setAngle(int angle)
 {
     mAngle = angle;

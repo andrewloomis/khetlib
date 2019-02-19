@@ -7,11 +7,13 @@
 class Pharoah : public Piece
 {
 public:
+    Pharoah(const Piece& piece)
+        : Piece(piece) {}
     Pharoah(int x, int y, int angle, Color color)
         : Piece(x,y,angle,color) {}
     Interaction laserInteraction(Direction laserIncidentDir) const override;
     PieceType type() const override { return PieceType::Pharoah; }
-    int value() const override { return 0; }
+    int value() const override { return 1000000; }
 };
 
 #endif // PHAROAH_H

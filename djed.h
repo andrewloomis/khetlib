@@ -7,6 +7,8 @@
 class Djed : public Piece
 {
 public:
+    Djed(const Piece& piece)
+        : Piece(piece) {}
     Djed(int x, int y, int angle, Color color)
         : Piece(x,y,angle,color) {}
     Interaction laserInteraction(Direction laserIncidentDir) const override;
