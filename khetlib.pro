@@ -39,7 +39,8 @@ HEADERS += \
         pyramid.h \
     djed.h \
     obelisk.h \
-    pharoah.h
+    pharoah.h \
+    gameconfigs.h
 
 
 unix {

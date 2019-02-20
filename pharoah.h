@@ -13,7 +13,7 @@ public:
         : Piece(x,y,angle,color) {}
     Interaction laserInteraction(Direction laserIncidentDir) const override;
     PieceType type() const override { return PieceType::Pharoah; }
-    int value() const override { return 1000000; }
+    int value() const override { return 10000000; }
 };
 
 #endif // PHAROAH_H

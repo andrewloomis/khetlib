@@ -3,12 +3,13 @@
 #include "djed.h"
 #include "obelisk.h"
 #include "pharoah.h"
+#include "gameconfigs.h"
 #include <QDebug>
 #include <QTimer>
 
 Game::Game()
 {
-    startGame();
+//    startGame();
 }
 
 Game::Game(const Game& newGame)
@@ -37,34 +38,20 @@ Game::Game(const Game& newGame)
 //    qDebug() << "copy";
 }
 
-void Game::startGame()
+void Game::startGame(GameConfig config)
 {
-    pieces.push_back(std::make_unique<Pyramid>(7,0,270,Color::Red));
-    pieces.push_back(std::make_unique<Pyramid>(2,1,0,Color::Red));
-    pieces.push_back(std::make_unique<Pyramid>(0,3,180,Color::Red));
-    pieces.push_back(std::make_unique<Pyramid>(0,4,270,Color::Red));
-    pieces.push_back(std::make_unique<Pyramid>(6,5,270,Color::Red));
-    pieces.push_back(std::make_unique<Pyramid>(7,3,270,Color::Red));
-    pieces.push_back(std::make_unique<Pyramid>(7,4,180,Color::Red));
-    pieces.push_back(std::make_unique<Obelisk>(6,0,0,Color::Red));
-    pieces.push_back(std::make_unique<Obelisk>(4,0,0,Color::Red));
-    pieces.push_back(std::make_unique<Pharoah>(5,0,0,Color::Red));
-
-    pieces.push_back(std::make_unique<Pyramid>(3,2,90,Color::Grey));
-    pieces.push_back(std::make_unique<Pyramid>(2,3,0,Color::Grey));
-    pieces.push_back(std::make_unique<Pyramid>(2,4,90,Color::Grey));
-    pieces.push_back(std::make_unique<Pyramid>(2,7,90,Color::Grey));
-    pieces.push_back(std::make_unique<Pyramid>(9,3,90,Color::Grey));
-    pieces.push_back(std::make_unique<Pyramid>(9,4,0,Color::Grey));
-    pieces.push_back(std::make_unique<Pyramid>(7,6,180,Color::Grey));
-    pieces.push_back(std::make_unique<Obelisk>(3,7,0,Color::Grey));
-    pieces.push_back(std::make_unique<Obelisk>(5,7,0,Color::Grey));
-    pieces.push_back(std::make_unique<Pharoah>(4,7,180,Color::Grey));
-
-    pieces.push_back(std::make_unique<Djed>(4,3,0,Color::Red));
-    pieces.push_back(std::make_unique<Djed>(5,3,90,Color::Red));
-    pieces.push_back(std::make_unique<Djed>(4,4,90,Color::Grey));
-    pieces.push_back(std::make_unique<Djed>(5,4,0,Color::Grey));
+    switch (config)
+    {
+    case GameConfig::Classic:
+        setUpClassic();
+        break;
+    case GameConfig::Imhotep:
+        setUpImhotep();
+        break;
+    case GameConfig::Dynasty:
+        setUpDynasty();
+        break;
+    }
 
     int i = 0;
     for (auto& piece : pieces)
@@ -73,6 +60,24 @@ void Game::startGame()
     }
     qDebug() << "first";
     printPieceLayout();
+}
+
+void Game::setUpClassic()
+{
+    pieces.clear();
+    pieces = Configs::classic();
+}
+
+void Game::setUpImhotep()
+{
+    pieces.clear();
+    pieces = Configs::imhotep();
+}
+
+void Game::setUpDynasty()
+{
+    pieces.clear();
+    pieces = Configs::dynasty();
 }
 
 void Game::printPieceLayout() const
@@ -108,7 +113,7 @@ void Game::reset()
 {
     currentTurn = Color::Grey;
     pieces.clear();
-    startGame();
+//    startGame();
 }
 
 Color Game::getPieceColor(std::size_t index) const

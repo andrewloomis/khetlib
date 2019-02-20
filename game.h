@@ -15,7 +15,11 @@ class Game : public QObject
 public:
     Game();
     Game(const Game& newGame);
-    void startGame();
+    void startGame(GameConfig config);
+    void setUpClassic();
+    void setUpImhotep();
+    void setUpDynasty();
+
     void nextTurn() { currentTurn = currentTurn == Color::Grey ? Color::Red : Color::Grey; }
     int isPieceAtPosition(Position pos) const;
     const std::unique_ptr<Piece>& getPieceAtPosition(Position pos);

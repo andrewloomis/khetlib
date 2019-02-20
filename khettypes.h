@@ -62,19 +62,19 @@ struct Translations
     static const int BottomRight = 128;
 };
 
+enum class GameConfig
+{
+    Classic = 0,
+    Imhotep,
+    Dynasty
+};
+
 struct Move
 {
     Move() {}
     Move(int index, Position pos, int angle = -1)
         : pieceIndex(index), movedPosition(pos),
           movedAngle(angle) {}
-//    Move(const Move& other)
-//    {
-//        value = other.value;
-//        pieceIndex = other.pieceIndex;
-//        movedPosition = other.movedPosition;
-//        movedAngle = other.movedAngle;
-//    }
     static Move minInit();
     static Move maxInit();
     bool operator>(const Move& other)
