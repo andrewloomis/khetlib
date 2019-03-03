@@ -33,7 +33,6 @@ public:
     QList<int> calculateBeamCoords(int startX, int startY);
     void endTurn();
     Color currentPlayerTurn() const { return currentTurn; }
-//    bool operator==(const Game& otherGame);
 
     Color getPieceColor(std::size_t index) const;
     Position getPiecePosition(size_t index) const { return pieces[index]->position(); }
